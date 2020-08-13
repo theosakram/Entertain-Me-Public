@@ -5,7 +5,6 @@ class CommandCenter {
     try {
       const movies = await Model.findAll();
       res.status(200).json(movies);
-      console.log(movies);
     } catch (err) {
       console.log(err);
     }

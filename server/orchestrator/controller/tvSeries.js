@@ -1,12 +1,10 @@
 const Axios = require("axios");
-const { response } = require("express");
 const baseURL = "http://localhost:3002";
-
 class CommandCenter {
   static async find(req, res) {
     try {
-      const response = Axios.get(baseURL);
-      res.status(200).json(response.data);
+      const { data } = await Axios.get(baseURL);
+      res.json(data);
     } catch (err) {
       console.log(err);
     }
@@ -19,8 +17,8 @@ class CommandCenter {
         method: "get",
         url: `${baseURL}/${id}`,
       };
-      const reponse = await Axios(config);
-      res.status(200).json(response.data);
+      const { data } = await Axios(config);
+      res.json(data);
     } catch (err) {
       console.log(err);
     }
@@ -42,7 +40,7 @@ class CommandCenter {
         data,
       };
       const response = await Axios(config);
-      res.status(201).json(response.ops[0]);
+      res.json(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -65,7 +63,7 @@ class CommandCenter {
         data,
       };
       const response = await Axios(config);
-      res.status(200).json(response.ops[0]);
+      res.json(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -78,8 +76,8 @@ class CommandCenter {
         method: "delete",
         url: `${baseURL}/${id}`,
       };
-      const reponse = await Axios(config);
-      res.status(200).json(response.ops[0]);
+      const { data } = await Axios(config);
+      res.json(data);
     } catch (err) {
       console.log(err);
     }
