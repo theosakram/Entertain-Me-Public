@@ -42,7 +42,7 @@ class Model {
 
   static async remove(id) {
     try {
-      const result = await tvs.remove({ _id: ObjectId(id) });
+      const result = await tvs.deleteOne({ _id: ObjectId(id) });
       return result;
     } catch (err) {
       console.log(err);

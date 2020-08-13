@@ -1,11 +1,19 @@
 const Axios = require("axios");
+const Redis = require("ioredis");
+const redis = new Redis();
 const baseURL = "http://localhost:3001";
 
 class CommandCenter {
   static async find(req, res) {
     try {
-      const { data } = await Axios.get(baseURL);
-      res.json(data);
+      const moviesCache = await redis.get("movies");
+      if (movieCache) {
+        res.json(JSON.parse(moviesCache));
+      } else {
+        const { data } = await Axios.get(baseURL);
+        await redis.set("movies", JSON.stringify(data));
+        res.json(data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -14,12 +22,18 @@ class CommandCenter {
   static async findById(req, res) {
     let { id } = req.params;
     try {
-      const config = {
-        method: "get",
-        url: `${baseURL}/${id}`,
-      };
-      const { data } = await Axios(config);
-      res.json(data);
+      const movieCache = await redis.get("movie");
+      if (movieCache) {
+        res.json(JSON.parse(movieCache));
+      } else {
+        const config = {
+          method: "get",
+          url: `${baseURL}/${id}`,
+        };
+        const { data } = await Axios(config);
+        await redis.set("movie", JSON.stringify(data));
+        res.json(data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -41,6 +55,8 @@ class CommandCenter {
         data,
       };
       const response = await Axios(config);
+      await redis.del("movie");
+      await redis.del("movies");
       res.json(response.data);
     } catch (err) {
       console.log(err);
@@ -64,6 +80,8 @@ class CommandCenter {
         data,
       };
       const response = await Axios(config);
+      await redis.del("movie");
+      await redis.del("movies");
       res.json(response.data);
     } catch (err) {
       console.log(err);
@@ -78,6 +96,8 @@ class CommandCenter {
         url: `${baseURL}/${id}`,
       };
       const { data } = await Axios(config);
+      await redis.del("movie");
+      await redis.del("movies");
       res.json(data);
     } catch (err) {
       console.log(err);
