@@ -1,11 +1,12 @@
 const express = require("express");
+const server = require("./schema");
+
 const app = express();
-const PORT = process.env.PORT || 3000;
-const routes = require("./routes");
+server.applyMiddleware({ app });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(routes);
-
-app.listen(PORT, (_) => console.log(`Listening on port ${PORT}`));
+app.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+);
