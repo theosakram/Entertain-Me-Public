@@ -1,16 +1,13 @@
 const Axios = require("axios");
+const Redis = require("ioredis");
+const redis = new Redis();
 const baseURL = "http://localhost:3002";
+
 class CommandCenter {
   static async find(req, res) {
     try {
-      const moviesCache = await redis.get("series");
-      if (movieCache) {
-        res.json(JSON.parse(moviesCache));
-      } else {
-        const { data } = await Axios.get(baseURL);
-        await redis.set("series", JSON.stringify(data));
-        res.json(data);
-      }
+      const { data } = await Axios.get(baseURL);
+      return data;
     } catch (err) {
       console.log(err);
     }
