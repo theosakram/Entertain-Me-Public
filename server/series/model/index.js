@@ -1,12 +1,12 @@
 const { db } = require("../config");
 const { ObjectId } = require("mongodb");
-const movs = db.collection("movies");
+const tvs = db.collection("tvseries");
 
 class Model {
   static async findAll() {
     try {
-      const movies = await movs.find().toArray();
-      return movies;
+      const series = await tvs.find().toArray();
+      return series;
     } catch (err) {
       console.log(err);
     }
@@ -14,8 +14,8 @@ class Model {
 
   static async findById(id) {
     try {
-      const movie = await movs.findOne({ _id: ObjectId(id) });
-      return movie;
+      const serial = await tvs.findOne({ _id: ObjectId(id) });
+      return serial;
     } catch (err) {
       console.log(err);
     }
@@ -23,8 +23,8 @@ class Model {
 
   static async add(data) {
     try {
-      const movie = await movs.insertOne(data);
-      return movie;
+      const serial = await tvs.insertOne(data);
+      return serial;
     } catch (err) {
       console.log(err);
     }
@@ -33,7 +33,7 @@ class Model {
   static async edit(id, data) {
     try {
       const filter = { _id: ObjectId(id) };
-      const result = await movs.replaceOne(filter, data);
+      const result = await tvs.replaceOne(filter, data);
       return result;
     } catch (err) {
       console.log(err);
@@ -42,7 +42,7 @@ class Model {
 
   static async remove(id) {
     try {
-      const result = await movs.deleteOne({ _id: ObjectId(id) });
+      const result = await tvs.deleteOne({ _id: ObjectId(id) });
       return result;
     } catch (err) {
       console.log(err);
