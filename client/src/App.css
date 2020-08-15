@@ -52,8 +52,27 @@
   -ms-transition: all 0.15s ease;
   -o-transition: all 0.15s ease;
   transition: all 0.15s ease;
+  cursor: pointer;
 }
 
-* {
-  font-family: "Fira Mono", monospace;
+.sidecard:hover {
+  -moz-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(0.98);
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  transition: all 0.15s ease;
+  cursor: pointer;
 }
+
+.baten:hover {
+  cursor: pointer;
+}
+
+/* * {
+  font-family: "Fira Mono", monospace;
+} */

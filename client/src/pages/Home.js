@@ -1,10 +1,11 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import { MostPopular, List } from "../components";
+import { MostPopular } from "../components";
 
 const GET_MOVIES = gql`
   query getMovies {
     movies {
+      _id
       title
       overview
       poster_path
@@ -17,6 +18,7 @@ const GET_MOVIES = gql`
 const GET_SERIES = gql`
   query getSeries {
     series {
+      _id
       title
       overview
       poster_path
@@ -56,8 +58,8 @@ function Home() {
           <h1 className="title is-4">MOST POPULAR MOVIES</h1>
           <div className="columns is-multiline">
             {mostPopularMov.map((movie) => (
-              <div className="column is-one-third">
-                <MostPopular key={movie.id} movie={movie} />
+              <div key={movie._id} className="column is-one-third">
+                <MostPopular movie={movie} />
               </div>
             ))}
           </div>
@@ -66,8 +68,8 @@ function Home() {
           <h1 className="title is-4">MOST POPULAR SERIES</h1>
           <div className="columns is-multiline">
             {mostPopularSer.map((movie) => (
-              <div className="column is-one-third">
-                <MostPopular key={movie.id} movie={movie} />
+              <div key={movie._id} className="column is-one-third">
+                <MostPopular movie={movie} />
               </div>
             ))}
           </div>

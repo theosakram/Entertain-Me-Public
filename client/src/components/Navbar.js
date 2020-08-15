@@ -8,12 +8,15 @@ function Navbar() {
         className="navbar"
         role="navigation"
         aria-label="main navigation"
-        style={{ borderBottom: "1px solid lightgray" }}
+        style={{ border: "1px solid lightgray", borderRadius: "5px" }}
       >
         <div className="navbar-brand">
-          <h1 className="navbar-item">
-            <Link to="/" style={{ fontFamily: "Satisfy, cursive" }}>
-              BI
+          <h1 className="navbar-item" style={{ marginLeft: "15px" }}>
+            <Link
+              to="/"
+              style={{ fontFamily: "Satisfy, cursive", color: "red" }}
+            >
+              Botullinum Injectum
             </Link>
           </h1>
 
@@ -50,11 +53,14 @@ function Navbar() {
             </div>
           </div>
 
-          <div className="navbar-end">
+          <div
+            className="navbar-end"
+            style={{ marginRight: "15px", marginBottom: "10px" }}
+          >
             <div className="navbar-item">
               <div className="buttons">
                 <a>
-                  <i class="fas fa-adjust"></i>
+                  <i className="fas fa-adjust"></i>
                 </a>
               </div>
             </div>

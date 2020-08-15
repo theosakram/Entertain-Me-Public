@@ -1,7 +1,17 @@
 import React from "react";
 import Rating from "react-rating";
+import { useHistory } from "react-router-dom";
 
 function MostPopular({ movie }) {
+  const history = useHistory();
+
+  function toDetails(id) {
+    history.push({
+      pathname: `/details/${id}`,
+      state: movie,
+    });
+  }
+
   return (
     <>
       <div
@@ -11,6 +21,7 @@ function MostPopular({ movie }) {
           borderRadius: "10px",
           marginRight: "15px",
         }}
+        onClick={() => toDetails(movie._id)}
       >
         <figure className="image is-4by5">
           <img
@@ -30,7 +41,7 @@ function MostPopular({ movie }) {
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                color: "#F15946",
+                color: "red",
               }}
             >
               <p className="title is-5">{movie.title}</p>

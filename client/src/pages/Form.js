@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Form() {
   const tags = [
@@ -45,76 +45,131 @@ function Form() {
     "Yaoi",
     "Yuri",
   ];
+
+  const [addMovieForm, setAddMovieForm] = useState({
+    title: "",
+    overview: "",
+    poster_path: "",
+    popularity: "",
+    tags: [],
+  });
+
+  function onChange(event) {
+    const { target } = event;
+    const { name } = target;
+
+    const value = name === "tags" ? target.checked : target.value;
+
+    setAddMovieForm({
+      ...addMovieForm,
+      [name]: value,
+      tags: tags.concat(value),
+    });
+  }
+
+  function addMovie(event) {
+    event.preventDefault();
+    console.log(addMovieForm);
+  }
+
   return (
     <>
-      <div className="container" style={{ marginTop: "25px" }}>
-        <div className="field">
-          <label className="label">Title</label>
-          <div className="control">
-            <input
-              className="input"
-              type="text"
-              placeholder="Input your title here..."
-            />
+      <form onSubmit={addMovie}>
+        <div className="container" style={{ marginTop: "25px" }}>
+          <div className="field">
+            <label className="label">Title</label>
+            <div className="control">
+              <input
+                name="title"
+                className="input"
+                type="text"
+                placeholder="Input your title here..."
+                defaultValue={addMovieForm.title}
+                onChange={onChange}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="field">
-          <label className="label">Poster URL</label>
-          <div className="control">
-            <input className="input" type="text" placeholder="URL" />
+          <div className="field">
+            <label className="label">Poster URL</label>
+            <div className="control">
+              <input
+                name="poster_path"
+                defaultValue={addMovieForm.poster_path}
+                className="input"
+                type="text"
+                placeholder="URL"
+                onChange={onChange}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="field">
-          <label className="label">Popularity</label>
-          <div className="control">
-            <input
-              className="input"
-              type="text"
-              placeholder="Input rating here"
-            />
+          <div className="field">
+            <label className="label">Popularity</label>
+            <div className="control">
+              <input
+                name="popularity"
+                defaultValue={addMovieForm.popularity}
+                className="input"
+                type="text"
+                placeholder="Input rating here"
+                onChange={onChange}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="field">
-          <label className="label">Tags</label>
-          {tags.map((tag, index) => (
-            <label key={index} class="checkbox" style={{ marginRight: "15px" }}>
-              <input value={tag} type="checkbox" />
-              {tag}
-            </label>
-          ))}
-        </div>
+          <div className="field">
+            <label className="label">Tags</label>
+            {tags.map((tag, index) => (
+              <label
+                key={index}
+                className="checkbox"
+                style={{ marginRight: "15px" }}
+              >
+                <input
+                  name="tags"
+                  checked={addMovieForm.tags}
+                  onChange={onChange}
+                  defaultValue={addMovieForm.tags}
+                  type="checkbox"
+                />
+                {tag}
+              </label>
+            ))}
+          </div>
 
-        <div className="field">
-          <label className="label">Overview</label>
-          <div className="control">
-            <textarea
-              className="textarea"
-              placeholder="Input your description here"
-            ></textarea>
+          <div className="field">
+            <label className="label">Overview</label>
+            <div className="control">
+              <textarea
+                name="overview"
+                onChange={onChange}
+                defaultValue={addMovieForm.overview}
+                className="textarea"
+                placeholder="Input your description here"
+              ></textarea>
+            </div>
           </div>
-        </div>
 
-        <div className="field">
-          <div className="control">
-            <label className="checkbox">
-              <input type="checkbox" /> I am sure the information I provided is
-              correct
-            </label>
+          <div className="field">
+            <div className="control">
+              <label className="checkbox">
+                <input type="checkbox" /> I am sure the information I provided
+                is correct
+              </label>
+            </div>
           </div>
-        </div>
 
-        <div className="field is-grouped">
-          <div className="control">
-            <button className="button is-link">Submit</button>
-          </div>
-          <div className="control">
-            <button className="button is-link is-light">Cancel</button>
+          <div className="field is-grouped">
+            <div className="control">
+              <button className="button is-link">Submit</button>
+            </div>
+            <div className="control">
+              <button className="button is-link is-light">Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </>
   );
 }

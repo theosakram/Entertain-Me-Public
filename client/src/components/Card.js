@@ -1,10 +1,21 @@
 import React from "react";
 import Rating from "react-rating";
+import { useHistory } from "react-router-dom";
 
 function Card({ movie }) {
+  const history = useHistory();
+
+  function toDetails(id) {
+    history.push({
+      pathname: `/details/${id}`,
+      state: movie,
+    });
+  }
+
   return (
     <>
       <div
+        onClick={() => toDetails(movie._id)}
         className="card"
         style={{
           borderRadius: "15px",
@@ -27,7 +38,7 @@ function Card({ movie }) {
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                color: "#F15946",
+                color: "red",
               }}
             >
               <p className="title is-6">{movie.title}</p>
