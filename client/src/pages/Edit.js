@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useLocation, useHistory } from "react-router-dom";
+import { Modal } from "../components";
 
 const EDIT_SERIAL = gql`
   mutation editSerial($id: String, $editMovieForm: newSerial) {
@@ -96,25 +97,39 @@ function Edit() {
     });
   }
 
+  const [modal, setModal] = useState(false);
+
   function edit(event) {
     event.preventDefault();
-    if (editMovieForm.type === "movies") {
-      editMovie({
-        variables: { id: state._id, editMovieForm },
-        refetchQueries: [`getMovies`],
-      });
-      history.push("/movies");
+    if (
+      addMovieForm.title === "" ||
+      addMovieForm.popularity === "" ||
+      addMovieForm.overview === "" ||
+      !addMovieForm.tags.length ||
+      addMovieForm.poster_path === ""
+    ) {
+      setModal(true);
     } else {
-      editSerial({
-        variables: { id: state._id, editMovieForm },
-        refetchQueries: [`getSeries`],
-      });
-      history.push("/series");
+      if (editMovieForm.type === "movies") {
+        editMovie({
+          variables: { id: state._id, editMovieForm },
+          refetchQueries: [`getMovies`],
+        });
+        history.push("/movies");
+      } else {
+        editSerial({
+          variables: { id: state._id, editMovieForm },
+          refetchQueries: [`getSeries`],
+        });
+        history.push("/series");
+      }
     }
   }
 
   return (
     <>
+      {modal && <Modal removeModal={() => setModal(false)} />}
+
       <form onSubmit={edit}>
         <div className="container" style={{ marginTop: "25px" }}>
           <div className="field">
