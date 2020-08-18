@@ -21,10 +21,11 @@ class CommandCenter {
   }
 
   static async add(req, res) {
-    let { title, overview, poster_path, popularity, tags } = req.body;
+    let { title, type, overview, poster_path, popularity, tags } = req.body;
     try {
       const serial = await Model.add({
         title,
+        type,
         overview,
         poster_path,
         popularity,
@@ -38,16 +39,17 @@ class CommandCenter {
 
   static async edit(req, res) {
     let { id } = req.params;
-    let { title, overview, poster_path, popularity, tags } = req.body;
+    let { title, type, overview, poster_path, popularity, tags } = req.body;
     try {
       const result = await Model.edit(id, {
         title,
+        type,
         overview,
         poster_path,
         popularity,
         tags,
       });
-      res.status(200).json(result.ops[0]);
+      res.status(200).json({ msg: "Edit successful" });
     } catch (err) {
       console.log(err);
     }

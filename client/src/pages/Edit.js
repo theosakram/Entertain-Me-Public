@@ -1,37 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { useHistory } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
-const ADD_SERIAL = gql`
-  mutation addSerial($addMovieForm: newSerial) {
-    addSerial(serial: $addMovieForm) {
-      _id
-      title
-      type
-      popularity
-      overview
-      poster_path
-      tags
-    }
+const EDIT_SERIAL = gql`
+  mutation editSerial($id: String, $editMovieForm: newSerial) {
+    editSerial(serialId: $id, serial: $editMovieForm)
   }
 `;
 
-const ADD_MOVIE = gql`
-  mutation AddMovie($addMovieForm: newMovie) {
-    addMovie(movie: $addMovieForm) {
-      _id
-      title
-      type
-      popularity
-      overview
-      poster_path
-      tags
-    }
+const EDIT_MOVIE = gql`
+  mutation editMovie($id: String, $editMovieForm: newMovie) {
+    editMovie(movieId: $id, movie: $editMovieForm)
   }
 `;
 
-function Form() {
+function Edit() {
+  const { state } = useLocation();
   const history = useHistory();
+
   const tags = [
     "Action",
     "Adventure",
@@ -78,7 +64,7 @@ function Form() {
     "Yuri",
   ];
 
-  const [addMovieForm, setAddMovieForm] = useState({
+  const [editMovieForm, setEditMovieForm] = useState({
     title: "",
     overview: "",
     type: "",
@@ -89,12 +75,12 @@ function Form() {
 
   const [tag, setTag] = useState([]);
 
-  const [addMovie] = useMutation(ADD_MOVIE);
-  const [addSerial] = useMutation(ADD_SERIAL);
+  const [editMovie] = useMutation(EDIT_MOVIE);
+  const [editSerial] = useMutation(EDIT_SERIAL);
 
   useEffect(() => {
-    setAddMovieForm({
-      ...addMovieForm,
+    setEditMovieForm({
+      ...editMovieForm,
       tags: tag,
     });
   }, [tag]);
@@ -104,23 +90,23 @@ function Form() {
     if (name === "tags") setTag([...tag, value]);
     if (name === "popularity") value = +value;
 
-    setAddMovieForm({
-      ...addMovieForm,
+    setEditMovieForm({
+      ...editMovieForm,
       [name]: value,
     });
   }
 
-  function add(event) {
+  function edit(event) {
     event.preventDefault();
-    if (addMovieForm.type === "movies") {
-      addMovie({
-        variables: { addMovieForm },
+    if (editMovieForm.type === "movies") {
+      editMovie({
+        variables: { id: state._id, editMovieForm },
         refetchQueries: [`getMovies`],
       });
       history.push("/movies");
     } else {
-      addSerial({
-        variables: { addMovieForm },
+      editSerial({
+        variables: { id: state._id, editMovieForm },
         refetchQueries: [`getSeries`],
       });
       history.push("/series");
@@ -129,7 +115,7 @@ function Form() {
 
   return (
     <>
-      <form onSubmit={add}>
+      <form onSubmit={edit}>
         <div className="container" style={{ marginTop: "25px" }}>
           <div className="field">
             <label className="label">Title</label>
@@ -139,7 +125,7 @@ function Form() {
                 className="input"
                 type="text"
                 placeholder="Input your title here..."
-                defaultValue={addMovieForm.title}
+                defaultValue={state.title}
                 onChange={onChange}
               />
             </div>
@@ -148,7 +134,7 @@ function Form() {
           <div className="field">
             <label className="label">Type</label>
             <select name="type" onChange={onChange}>
-              <option value="">Choose</option>
+              <option value={state.type}>{state.type}</option>
               <option value="movies">Movie</option>
               <option value="series">Serial</option>
             </select>
@@ -159,7 +145,7 @@ function Form() {
             <div className="control">
               <input
                 name="poster_path"
-                defaultValue={addMovieForm.poster_path}
+                defaultValue={state.poster_path}
                 className="input"
                 type="text"
                 placeholder="URL"
@@ -173,7 +159,7 @@ function Form() {
             <div className="control">
               <input
                 name="popularity"
-                defaultValue={addMovieForm.popularity}
+                defaultValue={state.popularity}
                 className="input"
                 type="text"
                 placeholder="Input rating here"
@@ -195,7 +181,7 @@ function Form() {
                   onChange={onChange}
                   type="checkbox"
                   value={tag}
-                  defaultChecked=""
+                  defaultChecked={state.tags.includes(tag)}
                 />
                 {tag}
               </label>
@@ -208,7 +194,7 @@ function Form() {
               <textarea
                 name="overview"
                 onChange={onChange}
-                defaultValue={addMovieForm.overview}
+                defaultValue={state.overview}
                 className="textarea"
                 placeholder="Input your description here"
               ></textarea>
@@ -238,4 +224,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default Edit;

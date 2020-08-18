@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import Rating from "react-rating";
 import { useHistory } from "react-router-dom";
+import { context } from "../App";
 
 function Card({ movie }) {
   const history = useHistory();
 
-  function toDetails(id) {
+  function toDetails(id, type) {
     history.push({
-      pathname: `/details/${id}`,
+      pathname: `/${type}/${id}`,
       state: movie,
     });
   }
 
+  const { theme } = useContext(context);
+
   return (
     <>
       <div
-        onClick={() => toDetails(movie._id)}
+        onClick={() => toDetails(movie._id, movie.type)}
         className="card"
         style={{
           borderRadius: "15px",
@@ -38,7 +41,7 @@ function Card({ movie }) {
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                color: "red",
+                color: theme === "light" ? "red" : "#009B72",
               }}
             >
               <p className="title is-6">{movie.title}</p>
@@ -48,6 +51,7 @@ function Card({ movie }) {
                 stop={10}
                 step={2}
                 fractions={2}
+                readonly="true"
                 initialRating={movie.popularity}
                 emptySymbol="far fa-star"
                 fullSymbol="fas fa-star"

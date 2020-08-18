@@ -7,6 +7,7 @@ const GET_MOVIES = gql`
     movies {
       _id
       title
+      type
       overview
       poster_path
       popularity
@@ -17,6 +18,7 @@ const GET_MOVIES = gql`
 
 function Movies() {
   let { data, loading, error } = useQuery(GET_MOVIES);
+  console.log(data);
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>Error....</h1>;
   else {

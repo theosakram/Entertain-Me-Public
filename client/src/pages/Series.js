@@ -7,6 +7,7 @@ const GET_SERIES = gql`
     series {
       _id
       title
+      type
       overview
       poster_path
       popularity
@@ -25,7 +26,7 @@ function Series() {
     return (
       <>
         <div className="container" style={{ marginTop: "25px" }}>
-          <div className="columns">
+          <div className="columns is-multiline">
             {list.map((movie) => (
               <div className="column is-one-quarter">
                 <Card movie={movie} key={movie._id} />

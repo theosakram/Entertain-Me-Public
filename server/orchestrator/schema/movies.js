@@ -9,6 +9,7 @@ const typeDefs = gql`
     _id: ID
     title: String
     overview: String
+    type: String
     poster_path: String
     popularity: Float
     tags: [String]
@@ -22,15 +23,16 @@ const typeDefs = gql`
   input newMovie {
     title: String
     overview: String
+    type: String
     poster_path: String
     popularity: Float
     tags: [String]
   }
 
   extend type Mutation {
-    addMovie(movie: newMovie!): Movie
-    editMovie(movieId: ID!, movie: newMovie!): Movie
-    deleteMovie(movieId: ID!): Movie
+    addMovie(movie: newMovie): Movie
+    editMovie(movieId: String, movie: newMovie): String
+    deleteMovie(movieId: String!): String
   }
 `;
 
@@ -47,19 +49,14 @@ const resolvers = {
       }
     },
     movie: async (_, args) => {
-      const movieCache = await redis.get("movie");
-      if (movieCache) {
-        return JSON.parse(movieCache);
-      } else {
-        let movieId = args.movieId;
-        const { data } = await Axios.get(`${baseURL}/${movieId}`);
-        await redis.set("movie", JSON.stringify(data));
-        return data;
-      }
+      let movieId = args.movieId;
+      const { data } = await Axios.get(`${baseURL}/${movieId}`);
+      await redis.set("movie", JSON.stringify(data));
+      return data;
     },
   },
   Mutation: {
-    addMovie: async (parents, args) => {
+    addMovie: async (_, args) => {
       const { movie } = args;
       const config = {
         method: "post",
@@ -81,7 +78,7 @@ const resolvers = {
       const { data } = await Axios(config);
       await redis.del("movie");
       await redis.del("movies");
-      return data;
+      return "Edit success";
     },
     deleteMovie: async (parents, args) => {
       const { movieId } = args;
@@ -89,10 +86,10 @@ const resolvers = {
         method: "delete",
         url: `${baseURL}/${movieId}`,
       };
-      const { data } = await Axios(config);
+      await Axios(config);
       await redis.del("movie");
       await redis.del("movies");
-      return data;
+      return "Data deleted successfully";
     },
   },
 };

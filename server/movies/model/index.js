@@ -33,7 +33,7 @@ class Model {
   static async edit(id, data) {
     try {
       const filter = { _id: ObjectId(id) };
-      const result = await movs.replaceOne(filter, data);
+      const result = await movs.updateOne(filter, { $set: data });
       return result;
     } catch (err) {
       console.log(err);

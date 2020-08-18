@@ -6,8 +6,9 @@ const redis = new Redis();
 
 const typeDefs = gql`
   type Serial {
-    _id: ID
+    _id: String
     title: String
+    type: String
     overview: String
     poster_path: String
     popularity: Float
@@ -16,11 +17,12 @@ const typeDefs = gql`
 
   extend type Query {
     series: [Serial]
-    serial(serialId: ID!): Serial
+    serial(serialId: String!): Serial
   }
 
   input newSerial {
     title: String
+    type: String
     overview: String
     poster_path: String
     popularity: Float
@@ -28,9 +30,9 @@ const typeDefs = gql`
   }
 
   extend type Mutation {
-    addSerial(serial: newSerial!): Serial
-    editSerial(serialId: ID!, serial: newSerial!): Serial
-    deleteSerial(serialId: ID!): Serial
+    addSerial(serial: newSerial): Serial
+    editSerial(serialId: String, serial: newSerial): String
+    deleteSerial(serialId: String!): String
   }
 `;
 
@@ -47,15 +49,10 @@ const resolvers = {
       }
     },
     serial: async (_, args) => {
-      const serialCache = await redis.get("serial");
-      if (serialCache) {
-        return JSON.parse(serialCache);
-      } else {
-        let { serialId } = args;
-        const { data } = await Axios.get(`${baseURL}/${serialId}`);
-        await redis.set("serial", JSON.stringify(data));
-        return data;
-      }
+      let { serialId } = args;
+      const { data } = await Axios.get(`${baseURL}/${serialId}`);
+      await redis.set("serial", JSON.stringify(data));
+      return data;
     },
   },
   Mutation: {
@@ -81,7 +78,8 @@ const resolvers = {
       const { data } = await Axios(config);
       await redis.del("serial");
       await redis.del("series");
-      return data;
+      console.log(data);
+      return "Edit success";
     },
     deleteSerial: async (parents, args) => {
       const { serialId } = args;
@@ -89,10 +87,10 @@ const resolvers = {
         method: "delete",
         url: `${baseURL}/${serialId}`,
       };
-      const { data } = await Axios(config);
+      await Axios(config);
       await redis.del("serial");
       await redis.del("series");
-      return data;
+      return "Data deleted succesfully";
     },
   },
 };

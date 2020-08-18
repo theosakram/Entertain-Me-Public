@@ -1,24 +1,51 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { context } from "../App";
 
 function Navbar() {
+  const { theme, changeTheme } = useContext(context);
+  const color = theme === "light" ? "dark" : "light";
+
   return (
     <>
       <nav
-        className="navbar"
+        className={`navbar ${theme === "light" ? "is-light" : "is-dark"}`}
         role="navigation"
         aria-label="main navigation"
-        style={{ border: "1px solid lightgray", borderRadius: "5px" }}
+        style={{
+          borderRight: `1px solid ${theme === "light" ? "lightgray" : "gray"}`,
+          borderLeft: `1px solid ${theme === "light" ? "lightgray" : "gray"}`,
+          borderBottom: `1px solid ${theme === "light" ? "lightgray" : "gray"}`,
+          borderRadius: "5px",
+        }}
       >
         <div className="navbar-brand">
           <h1 className="navbar-item" style={{ marginLeft: "15px" }}>
             <Link
               to="/"
-              style={{ fontFamily: "Satisfy, cursive", color: "red" }}
+              style={{
+                color: theme === "light" ? "red" : "#009B72",
+              }}
             >
               Botullinum Injectum
             </Link>
           </h1>
+
+          <div
+            className="panel-block"
+            style={{ borderBottomColor: theme === "light" ? "white" : "black" }}
+          >
+            <p className="control has-icons-left">
+              <input
+                className="input is-dark"
+                type="text"
+                placeholder="Search by Title"
+              />
+              <span className="icon is-left">
+                <i className="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
 
           <a
             role="button"
@@ -59,7 +86,10 @@ function Navbar() {
           >
             <div className="navbar-item">
               <div className="buttons">
-                <a>
+                <a
+                  onClick={() => changeTheme(color)}
+                  style={{ color: theme === "light" ? "red" : "#009B72" }}
+                >
                   <i className="fas fa-adjust"></i>
                 </a>
               </div>
