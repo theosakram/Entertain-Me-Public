@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import { context } from "../App";
+import { Modal } from "../components";
 
 const ADD_SERIAL = gql`
   mutation addSerial($addMovieForm: newSerial) {
@@ -112,25 +113,39 @@ function Form() {
     });
   }
 
+  const [modal, setModal] = useState(false);
+
   function add(event) {
     event.preventDefault();
-    if (addMovieForm.type === "movies") {
-      addMovie({
-        variables: { addMovieForm },
-        refetchQueries: [`getMovies`],
-      });
-      history.push("/movies");
+    if (
+      addMovieForm.title === "" ||
+      addMovieForm.popularity === "" ||
+      addMovieForm.overview === "" ||
+      !addMovieForm.tags.length ||
+      addMovieForm.poster_path === ""
+    ) {
+      setModal(true);
     } else {
-      addSerial({
-        variables: { addMovieForm },
-        refetchQueries: [`getSeries`],
-      });
-      history.push("/series");
+      if (addMovieForm.type === "movies") {
+        addMovie({
+          variables: { addMovieForm },
+          refetchQueries: [`getMovies`],
+        });
+        history.push("/movies");
+      } else {
+        addSerial({
+          variables: { addMovieForm },
+          refetchQueries: [`getSeries`],
+        });
+        history.push("/series");
+      }
     }
   }
 
   return (
     <>
+      {modal && <Modal removeModal={() => setModal(false)} />}
+
       <div className="container" style={{ width: "50%" }}>
         <form onSubmit={add}>
           <div className="container" style={{ marginTop: "25px" }}>
