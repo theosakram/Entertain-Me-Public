@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
+import { context } from "../App";
 
 const ADD_SERIAL = gql`
   mutation addSerial($addMovieForm: newSerial) {
@@ -31,6 +32,7 @@ const ADD_MOVIE = gql`
 `;
 
 function Form() {
+  const { theme } = useContext(context);
   const history = useHistory();
   const tags = [
     "Action",
@@ -129,111 +131,129 @@ function Form() {
 
   return (
     <>
-      <form onSubmit={add}>
-        <div className="container" style={{ marginTop: "25px" }}>
-          <div className="field">
-            <label className="label">Title</label>
-            <div className="control">
-              <input
-                name="title"
-                className="input"
-                type="text"
-                placeholder="Input your title here..."
-                defaultValue={addMovieForm.title}
-                onChange={onChange}
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Type</label>
-            <select name="type" onChange={onChange}>
-              <option value="">Choose</option>
-              <option value="movies">Movie</option>
-              <option value="series">Serial</option>
-            </select>
-          </div>
-
-          <div className="field">
-            <label className="label">Poster URL</label>
-            <div className="control">
-              <input
-                name="poster_path"
-                defaultValue={addMovieForm.poster_path}
-                className="input"
-                type="text"
-                placeholder="URL"
-                onChange={onChange}
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Popularity</label>
-            <div className="control">
-              <input
-                name="popularity"
-                defaultValue={addMovieForm.popularity}
-                className="input"
-                type="text"
-                placeholder="Input rating here"
-                onChange={onChange}
-              />
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Tags</label>
-            {tags.map((tag, index) => (
+      <div className="container" style={{ width: "50%" }}>
+        <form onSubmit={add}>
+          <div className="container" style={{ marginTop: "25px" }}>
+            <div className="field">
               <label
-                key={index}
-                className="checkbox"
-                style={{ marginRight: "15px" }}
+                className="label"
+                style={{ color: theme === "light" ? "black" : "white" }}
               >
+                Title
+              </label>
+              <div className="control">
                 <input
-                  name="tags"
+                  name="title"
+                  className="input"
+                  type="text"
+                  placeholder="Input your title here..."
+                  defaultValue={addMovieForm.title}
                   onChange={onChange}
-                  type="checkbox"
-                  value={tag}
-                  defaultChecked=""
                 />
-                {tag}
+              </div>
+            </div>
+
+            <div className="field">
+              <label
+                className="label"
+                style={{ color: theme === "light" ? "black" : "white" }}
+              >
+                Poster URL
               </label>
-            ))}
-          </div>
-
-          <div className="field">
-            <label className="label">Overview</label>
-            <div className="control">
-              <textarea
-                name="overview"
-                onChange={onChange}
-                defaultValue={addMovieForm.overview}
-                className="textarea"
-                placeholder="Input your description here"
-              ></textarea>
+              <div className="control">
+                <input
+                  name="poster_path"
+                  defaultValue={addMovieForm.poster_path}
+                  className="input"
+                  type="text"
+                  placeholder="URL"
+                  onChange={onChange}
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="field">
-            <div className="control">
-              <label className="checkbox">
-                <input type="checkbox" /> I am sure the information I provided
-                is correct
+            <div className="field">
+              <label
+                className="label"
+                style={{ color: theme === "light" ? "black" : "white" }}
+              >
+                Popularity
               </label>
+              <div className="control">
+                <input
+                  name="popularity"
+                  defaultValue={addMovieForm.popularity}
+                  className="input"
+                  type="text"
+                  placeholder="Input rating here"
+                  onChange={onChange}
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="field is-grouped">
-            <div className="control">
-              <button className="button is-link">Submit</button>
+            <div className="field">
+              <label
+                className="label"
+                style={{ color: theme === "light" ? "black" : "white" }}
+              >
+                Tags
+              </label>
+              <div className="columns is-multiline">
+                {tags.map((tag, index) => (
+                  <div className="column">
+                    <label
+                      key={index}
+                      className="checkbox"
+                      style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        color: theme === "light" ? "black" : "white",
+                      }}
+                    >
+                      <input
+                        name="tags"
+                        onChange={onChange}
+                        type="checkbox"
+                        value={tag}
+                        defaultChecked=""
+                      />
+                      {tag}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="control">
-              <button className="button is-link is-light">Cancel</button>
+
+            <div className="field">
+              <label
+                className="label"
+                style={{ color: theme === "light" ? "black" : "white" }}
+              >
+                Overview
+              </label>
+              <div className="control">
+                <textarea
+                  name="overview"
+                  onChange={onChange}
+                  defaultValue={addMovieForm.overview}
+                  className="textarea"
+                  placeholder="Input your description here"
+                ></textarea>
+              </div>
+            </div>
+
+            <div className="field is-grouped">
+              <div className="control">
+                <button className="button is-link">Submit</button>
+              </div>
+              <div className="control">
+                <button className="button is-link is-light">Cancel</button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </>
   );
 }

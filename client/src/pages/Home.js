@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { context } from "../App";
 import { useHistory } from "react-router-dom";
+import { Loader } from "../components";
 
 const GET_MOVIES = gql`
   query getMovies {
@@ -51,18 +52,7 @@ function Home() {
   );
 
   if (loadMov || loadSer) {
-    return (
-      <div className="container">
-        <div className="hero">
-          <div className="lds-ellipsis">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
   if (errMov || errSer) return <h1>Error....</h1>;
   else {
@@ -117,7 +107,7 @@ function Home() {
                         backgroundImage: `url(${mostPopularMov[0].poster_path})`,
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
-                        backgroundPosition: "top",
+                        backgroundPosition: "center",
                       }}
                     >
                       <p className="title is-4 has-text-left has-text-white">
@@ -268,39 +258,6 @@ function Home() {
             </div>
           </div>
         </div>
-        {/* <div
-          className="container"
-          style={{ marginBottom: "55px", marginTop: "15px" }}
-        >
-          <h1
-            className="title is-4 has-text-left"
-            style={{ color: theme === "light" ? "black" : "white" }}
-          >
-            MOST POPULAR MOVIES
-          </h1>
-          <div className="columns is-multiline is-gapless">
-            {mostPopularMov.map((movie) => (
-              <div key={movie._id} className="column is-one-third">
-                <MostPopular movie={movie} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="container" style={{ paddingBottom: "25px" }}>
-          <h1
-            className="title is-4 has-text-left"
-            style={{ color: theme === "light" ? "black" : "white" }}
-          >
-            MOST POPULAR SERIES
-          </h1>
-          <div className="columns is-multiline is-gapless">
-            {mostPopularSer.map((movie) => (
-              <div key={movie._id} className="column is-one-third">
-                <MostPopular movie={movie} />
-              </div>
-            ))}
-          </div>
-        </div> */}
       </div>
     );
   }

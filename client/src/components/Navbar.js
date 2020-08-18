@@ -68,22 +68,34 @@ function Navbar() {
             <Link to="/series" className="navbar-item">
               Series
             </Link>
-
-            <div className="navbar-item has-dropdown is-hoverable">
-              <a className="navbar-link">More</a>
-
-              <div className="navbar-dropdown">
-                <Link to="/form" className="navbar-item">
-                  Add
-                </Link>
-              </div>
-            </div>
           </div>
 
           <div
             className="navbar-end"
             style={{ marginRight: "15px", marginBottom: "10px" }}
           >
+            <div className="navbar-item">
+              <div className="buttons">
+                <Link
+                  to="/form"
+                  style={{ color: theme === "light" ? "red" : "#009B72" }}
+                >
+                  <i class="fas fa-plus"></i>
+                </Link>
+              </div>
+            </div>
+
+            <div className="navbar-item">
+              <div className="buttons">
+                <Link
+                  to="/favs"
+                  style={{ color: theme === "light" ? "red" : "#009B72" }}
+                >
+                  <i class="fas fa-heart"></i>
+                </Link>
+              </div>
+            </div>
+
             <div className="navbar-item">
               <div className="buttons">
                 <a

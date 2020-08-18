@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Rating from "react-rating";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { useLocation, useHistory } from "react-router-dom";
 import { context } from "../App";
+import { Loader } from "../components";
+import client, { GET_FAV } from "../config/graphql";
 
 const GET_MOVIES = gql`
   query getMovies {
@@ -80,10 +82,24 @@ function Details() {
     }
   }
 
+  const addFavs = (dataFav) => {
+    const { favs } = client.readQuery({ query: GET_FAV });
+    client.writeQuery({
+      query: GET_FAV,
+      data: {
+        favs: [...favs, dataFav],
+      },
+    });
+  };
+
+  let { data: sukas } = useQuery(GET_FAV);
+
+  let filtered = sukas.favs?.filter((fav) => fav.title === state.title);
+
   let { data: dataMov, loading: loadMov, error: errMov } = useQuery(GET_MOVIES);
   let { data: dataSer, loading: loadSer, error: errSer } = useQuery(GET_SERIES);
 
-  if (loadMov || loadSer) return <h1>Loading...</h1>;
+  if (loadMov || loadSer) return <Loader />;
   if (errMov || errSer) return <h1>Error....</h1>;
   else {
     let copyData = JSON.parse(JSON.stringify(dataMov.movies));
@@ -209,22 +225,29 @@ function Details() {
                     </span>
                   ))}
                 </div>
-                <button
-                  className="subtitle is-6 baten"
-                  style={{
-                    backgroundColor: theme === "light" ? "white" : "#37383F",
-                    color: theme === "light" ? "red" : "#009B72",
-                    borderRadius: "5px",
-                    border: `0.5px solid ${
-                      theme === "light" ? "lightgray" : "#009B72"
-                    }`,
-                    height: 35,
-                    textAlign: "center",
-                  }}
-                >
-                  <i className="fas fa-heart"></i>{" "}
-                  <span style={{ marginLeft: "5px" }}>Favorites</span>
-                </button>
+                {!filtered.length ? (
+                  <button
+                    onClick={() => addFavs(state)}
+                    className="subtitle is-6 baten"
+                    style={{
+                      backgroundColor: theme === "light" ? "white" : "#37383F",
+                      color: theme === "light" ? "red" : "#009B72",
+                      borderRadius: "5px",
+                      border: `0.5px solid ${
+                        theme === "light" ? "lightgray" : "#009B72"
+                      }`,
+                      height: 35,
+                      textAlign: "center",
+                    }}
+                  >
+                    <i className="fas fa-heart"></i>{" "}
+                    <span style={{ marginLeft: "5px" }}>Favorites</span>
+                  </button>
+                ) : (
+                  <span style={{ marginLeft: "5px", color: "red" }}>
+                    Has already been favorited
+                  </span>
+                )}
               </div>
             </div>
           </div>

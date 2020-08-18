@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import { Card } from "../components";
+import { Card, Loader } from "../components";
 
 const GET_SERIES = gql`
   query getSeries {
@@ -18,7 +18,7 @@ const GET_SERIES = gql`
 
 function Series() {
   let { data, loading, error } = useQuery(GET_SERIES);
-  if (loading) return <h1>Loading...</h1>;
+  if (loading) return <Loader />;
   if (error) return <h1>Error....</h1>;
   else {
     let copy = JSON.parse(JSON.stringify(data.series));

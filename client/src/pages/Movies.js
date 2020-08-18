@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import { Card } from "../components";
+import { Card, Loader } from "../components";
 
 const GET_MOVIES = gql`
   query getMovies {
@@ -19,7 +19,7 @@ const GET_MOVIES = gql`
 function Movies() {
   let { data, loading, error } = useQuery(GET_MOVIES);
   console.log(data);
-  if (loading) return <h1>Loading...</h1>;
+  if (loading) return <Loader />;
   if (error) return <h1>Error....</h1>;
   else {
     let copy = JSON.parse(JSON.stringify(data.movies));
